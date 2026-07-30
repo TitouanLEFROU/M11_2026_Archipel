@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "VRBoatControls",
+    "maps": [
+        {
+            "name": "Boat",
+            "id": "49e2d5cb-c4ed-4ac3-88fc-3842462ab203",
+            "actions": [
+                {
+                    "name": "LeftPaddleEngage",
+                    "type": "Button",
+                    "id": "9952094e-e58e-427d-a252-c59c95dd64cd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightPaddleEngage",
+                    "type": "Button",
+                    "id": "6fdde641-973b-45c7-8563-4e8488dbbe47",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ExitBoat",
+                    "type": "Button",
+                    "id": "c1153e96-b7db-409c-81b7-69e24a91cda5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "56acd7ab-8f11-4d4a-9115-32f35d26530a",
+                    "path": "<QuestTouchPlusController>{LeftHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftPaddleEngage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9758d6d2-d21b-4d4a-a1f0-54ca6e4ead7d",
+                    "path": "<QuestTouchPlusController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightPaddleEngage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "13e4e878-9252-4d3a-8633-c7cfcb962789",
+                    "path": "<QuestTouchPlusController>/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ExitBoat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

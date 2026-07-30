@@ -70,7 +70,7 @@ public class CanoeController : MonoBehaviour
             : reverseAcceleration;
 
         float currentForwardSpeed =
-            Vector3.Dot(body.velocity, transform.forward);
+            Vector3.Dot(body.linearVelocity, transform.forward);
 
         bool belowMaximumSpeed =
             Mathf.Abs(currentForwardSpeed) < maximumSpeed;
@@ -97,7 +97,7 @@ public class CanoeController : MonoBehaviour
             return;
 
         float forwardSpeed = Mathf.Abs(
-            Vector3.Dot(body.velocity, transform.forward));
+            Vector3.Dot(body.linearVelocity, transform.forward));
 
         float speedFactor = Mathf.InverseLerp(
             0f,
@@ -119,7 +119,7 @@ public class CanoeController : MonoBehaviour
     private void ApplyLateralResistance()
     {
         float lateralSpeed =
-            Vector3.Dot(body.velocity, transform.right);
+            Vector3.Dot(body.linearVelocity, transform.right);
 
         Vector3 lateralVelocity =
             transform.right * lateralSpeed;
@@ -132,9 +132,9 @@ public class CanoeController : MonoBehaviour
     private void LimitSpeed()
     {
         Vector3 flatVelocity = new Vector3(
-            body.velocity.x,
+            body.linearVelocity.x,
             0f,
-            body.velocity.z);
+            body.linearVelocity.z);
 
         if (flatVelocity.sqrMagnitude >
             maximumSpeed * maximumSpeed)
@@ -142,9 +142,9 @@ public class CanoeController : MonoBehaviour
             flatVelocity =
                 flatVelocity.normalized * maximumSpeed;
 
-            body.velocity = new Vector3(
+            body.linearVelocity = new Vector3(
                 flatVelocity.x,
-                body.velocity.y,
+                body.linearVelocity.y,
                 flatVelocity.z);
         }
     }
