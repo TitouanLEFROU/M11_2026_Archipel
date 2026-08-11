@@ -55,7 +55,14 @@ public class FpsController : MonoBehaviour
     private float pitch;
 
     private bool movementEnabled = true;
-
+    [Header("Water Respawn")]
+    [SerializeField] private LayerMask islandGroundLayer;
+    [SerializeField] private float respawnSearchRadius = 30f;
+    [SerializeField] private float respawnSearchStep = 1f;
+    [SerializeField] private float respawnRayHeight = 100f;
+    [SerializeField] private float respawnHeightOffset = 0.1f;
+    [SerializeField] private float minimumGroundAboveWater = 0.5f;
+    [SerializeField] private float maximumRespawnSlope = 35f;
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -146,29 +153,82 @@ public class FpsController : MonoBehaviour
             IsValidGrounded()
         );
     }
+    //private void UpdateWaterSafety()
+    //{
+    //    if (waterSurface == null)
+    //        return;
+
+    //    float feetHeight = characterController.bounds.min.y;
+    //    float waterHeight = waterSurface.position.y;
+
+    //    // Enregistre la dernière position valide sur une île.
+    //    if (IsValidGrounded())
+    //    {
+    //        lastSafePosition = transform.position;
+    //        return;
+    //    }
+
+    //    // Replace le joueur s'il descend trop profondément.
+    //    if (feetHeight < waterHeight - respawnDepth)
+    //    {
+    //        characterController.enabled = false;
+
+    //        transform.position = lastSafePosition;
+
+    //        characterController.enabled = true;
+
+    //        verticalVelocity = groundedVelocity;
+    //    }
+    //}
     private void UpdateWaterSafety()
     {
         if (waterSurface == null)
             return;
 
-        float feetHeight = characterController.bounds.min.y;
-        float waterHeight = waterSurface.position.y;
+        float feetHeight =
+            characterController.bounds.min.y;
 
-        // Enregistre la dernière position valide sur une île.
+        float waterHeight =
+            waterSurface.position.y;
+
+        // Le joueur est sur une île :
+        // on mémorise sa position comme position sûre.
         if (IsValidGrounded())
         {
             lastSafePosition = transform.position;
             return;
         }
 
-        // Replace le joueur s'il descend trop profondément.
+        // Le joueur est suffisamment profondément
+        // sous la surface de l'eau.
         if (feetHeight < waterHeight - respawnDepth)
         {
-            characterController.enabled = false;
+            Vector3 waterContactPosition =
+                transform.position;
 
-            transform.position = lastSafePosition;
+            if (FindNearestIslandGround(
+                waterContactPosition,
+                out Vector3 nearestGround))
+            {
+                characterController.enabled = false;
 
-            characterController.enabled = true;
+                transform.position =
+                    nearestGround +
+                    Vector3.up * respawnHeightOffset;
+
+                characterController.enabled = true;
+            }
+            else
+            {
+                // Sécurité : si aucune île n'est trouvée,
+                // revenir à la dernière position sûre.
+                characterController.enabled = false;
+
+                transform.position =
+                    lastSafePosition;
+
+                characterController.enabled = true;
+            }
 
             verticalVelocity = groundedVelocity;
         }
@@ -285,5 +345,166 @@ public class FpsController : MonoBehaviour
 
         viewYaw.localRotation = Quaternion.identity;
         viewPitch.localRotation = Quaternion.identity;
+    }
+    private bool FindNearestIslandGround(
+       Vector3 waterContactPosition,
+       out Vector3 groundPosition)
+    {
+        groundPosition = Vector3.zero;
+
+        if (waterSurface == null)
+        {
+            Debug.LogError(
+                "[FpsController] Water Surface n'est pas assignée.");
+
+            return false;
+        }
+
+        Terrain[] terrains = Terrain.activeTerrains;
+
+        if (terrains == null || terrains.Length == 0)
+        {
+            Debug.LogError(
+                "[FpsController] Aucun Terrain actif trouvé.");
+
+            return false;
+        }
+
+        float waterHeight =
+            waterSurface.position.y;
+
+        float closestDistance =
+            float.MaxValue;
+
+        bool found = false;
+
+        foreach (Terrain terrain in terrains)
+        {
+            // Sécurité : Terrain inexistant
+            if (terrain == null)
+                continue;
+
+            // Sécurité : TerrainData inexistant
+            TerrainData terrainData =
+                terrain.terrainData;
+
+            if (terrainData == null)
+            {
+                Debug.LogWarning(
+                    "[FpsController] Le Terrain " +
+                    terrain.name +
+                    " n'a pas de TerrainData.");
+
+                continue;
+            }
+
+            Vector3 terrainPosition =
+                terrain.transform.position;
+
+            Vector3 terrainSize =
+                terrainData.size;
+
+            // Vérification de la taille du terrain
+            if (terrainSize.x <= 0f ||
+                terrainSize.z <= 0f)
+            {
+                continue;
+            }
+
+            float minX =
+                terrainPosition.x;
+
+            float maxX =
+                terrainPosition.x +
+                terrainSize.x;
+
+            float minZ =
+                terrainPosition.z;
+
+            float maxZ =
+                terrainPosition.z +
+                terrainSize.z;
+
+            // On trouve le point du terrain
+            // horizontalement le plus proche du joueur.
+            float closestX =
+                Mathf.Clamp(
+                    waterContactPosition.x,
+                    minX,
+                    maxX);
+
+            float closestZ =
+                Mathf.Clamp(
+                    waterContactPosition.z,
+                    minZ,
+                    maxZ);
+
+            // Coordonnées normalisées du terrain
+            float normalizedX =
+                Mathf.InverseLerp(
+                    minX,
+                    maxX,
+                    closestX);
+
+            float normalizedZ =
+                Mathf.InverseLerp(
+                    minZ,
+                    maxZ,
+                    closestZ);
+
+            // Hauteur réelle du terrain
+            float terrainHeight =
+                terrain.SampleHeight(
+                    new Vector3(
+                        closestX,
+                        0f,
+                        closestZ));
+
+            terrainHeight +=
+                terrainPosition.y;
+
+            // Le terrain doit être suffisamment
+            // au-dessus de l'eau.
+            if (terrainHeight <
+                waterHeight +
+                minimumGroundAboveWater)
+            {
+                continue;
+            }
+
+            // Vérification de la pente
+            Vector3 normal =
+                terrainData.GetInterpolatedNormal(
+                    normalizedX,
+                    normalizedZ);
+
+            float slope =
+                Vector3.Angle(
+                    normal,
+                    Vector3.up);
+
+            if (slope > maximumRespawnSlope)
+                continue;
+
+            Vector3 candidate =
+                new Vector3(
+                    closestX,
+                    terrainHeight,
+                    closestZ);
+
+            float distance =
+                Vector3.Distance(
+                    waterContactPosition,
+                    candidate);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                groundPosition = candidate;
+                found = true;
+            }
+        }
+
+        return found;
     }
 }

@@ -94,26 +94,38 @@ public class CanoeController : MonoBehaviour
         float turnInput = cachedMoveInput.x;
 
         if (Mathf.Abs(turnInput) < 0.01f)
+        {
+            // Freine progressivement la rotation
+            body.angularVelocity = Vector3.Lerp(
+                body.angularVelocity,
+                Vector3.zero,
+                5f * Time.fixedDeltaTime);
+
             return;
+        }
 
         float forwardSpeed = Mathf.Abs(
-            Vector3.Dot(body.linearVelocity, transform.forward));
+            Vector3.Dot(
+                body.linearVelocity,
+                transform.forward));
 
         float speedFactor = Mathf.InverseLerp(
             0f,
             maximumSpeed,
             forwardSpeed);
 
-        float currentTurnAcceleration = Mathf.Lerp(
+        float targetTurnSpeed = Mathf.Lerp(
             turnAccelerationAtRest,
             turnAcceleration,
             speedFactor);
 
-        body.AddTorque(
-            Vector3.up *
-            turnInput *
-            currentTurnAcceleration,
-            ForceMode.Acceleration);
+        // Rotation directement contrôlée
+        Vector3 angularVelocity = body.angularVelocity;
+
+        angularVelocity.y =
+            turnInput * targetTurnSpeed;
+
+        body.angularVelocity = angularVelocity;
     }
 
     private void ApplyLateralResistance()
