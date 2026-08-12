@@ -76,8 +76,9 @@ Material:
     - _ColorThickness: 1
     - _Cull: 2
     - _DstBlend: 10
+    - _DstBlendAlpha: 10
     - _EdgeColorStrength: 1
-    - _EdgeFade: 0.588
+    - _EdgeFade: 0.566
     - _Float: -1.6
     - _Metallic: 1
     - _NormalMapStrength: 0.1
@@ -94,6 +95,7 @@ Material:
     - _RefractionDepth: 1
     - _RefractionIntensity: 0.09
     - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
     - _Surface: 1
     - _ThicknessPower: 1
     - _WorkflowMode: 1
@@ -104,10 +106,10 @@ Material:
     - _BlendOffsetSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _Color: {r: 0.11372546, g: 0.47896016, b: 0.62352943, a: 0}
     - _Color2: {r: 0.09545211, g: 0.31132078, b: 0.25649697, a: 0}
-    - _ColorBright: {r: 0.17254904, g: 0.34394622, b: 0.3529412, a: 0}
+    - _ColorBright: {r: 0.3089623, g: 0.5, b: 0.48035437, a: 0}
     - _ColorDark: {r: 0.09545211, g: 0.31132078, b: 0.25649697, a: 0}
-    - _ColorDeep: {r: 0.21877201, g: 0.34158185, b: 0.354, a: 1}
-    - _EdgeColor: {r: 0.4594755, g: 0.57582647, b: 0.6037736, a: 0}
+    - _ColorDeep: {r: 0.13510145, g: 0.39038903, b: 0.41509432, a: 1}
+    - _EdgeColor: {r: 0.35510856, g: 0.7097121, b: 0.7924528, a: 0}
     - _RefractionFade: {r: 0, g: 10, b: 0, a: 0}
     - _WaterDepthRange: {r: 0, g: 10, b: 0, a: 0}
   m_BuildTextureStacks: []
