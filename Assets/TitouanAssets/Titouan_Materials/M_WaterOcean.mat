@@ -83,7 +83,7 @@ Material:
     - _CausticsAlpha: 0.01
     - _CausticsScale: 60
     - _CausticsSpeed: 10
-    - _ColorAlpha: 0.557
+    - _ColorAlpha: 0.53
     - _ColorThickness: 1
     - _Cull: 2
     - _DstBlend: 10
@@ -122,12 +122,12 @@ Material:
     - _BlendOffsetSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _Color: {r: 0.11372546, g: 0.47896016, b: 0.62352943, a: 0}
     - _Color2: {r: 0.09545211, g: 0.31132078, b: 0.25649697, a: 0}
-    - _ColorBright: {r: 0.3089623, g: 0.5, b: 0.48035437, a: 0}
+    - _ColorBright: {r: 0.3083837, g: 0.39622638, b: 0.38547012, a: 1}
     - _ColorDark: {r: 0.09545211, g: 0.31132078, b: 0.25649697, a: 0}
-    - _ColorDeep: {r: 0.13510145, g: 0.39038903, b: 0.41509432, a: 1}
+    - _ColorDeep: {r: 0, g: 0.5019608, b: 0.5254902, a: 0.77254903}
     - _EdgeColor: {r: 0.35510856, g: 0.7097121, b: 0.7924528, a: 0}
     - _FoamColor: {r: 0.9339623, g: 0.90404445, b: 0.7797704, a: 0.7607843}
     - _RefractionFade: {r: 0, g: 10, b: 0, a: 0}
-    - _WaterDepthRange: {r: 0, g: 10, b: 0, a: 0}
+    - _WaterDepthRange: {r: 3.38, g: 14.07, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
